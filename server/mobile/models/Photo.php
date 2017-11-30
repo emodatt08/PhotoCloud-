@@ -45,6 +45,7 @@ class Photo extends Connection
 
     public function insert($photos){
         $photo_url = "http://".gethostbyname(gethostname())."/mobile/public/images/".$photos['image'];
+        $photo_caption = (isset($photos['caption'])) ? $photos['caption'] : "";
         $stmt = $this->conn->prepare("INSERT INTO photos(user_id, album_id, caption, image, created_at, updated_at) VALUES(?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("ssssss", $photos['user_id'], $photos['album_id'], $photos['caption'], $photo_url, $this->timestamp, $this->timestamp);
         $result = $stmt->execute();
