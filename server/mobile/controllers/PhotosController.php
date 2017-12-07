@@ -38,6 +38,7 @@ public function all($request){
 
 
     public function albums_all($request){
+        $this->response_header->logAction($request, 1, "POST", "", "albums_all");
         if(isset($request['user_id'])){
             $albums = $this->photo->albums($request);
             if($albums){
@@ -45,11 +46,13 @@ public function all($request){
                 $this->response["responseMessage"] = "Successfully retrieved all albums";
                 $this->response["data"]["albums"] = $albums;
                 $this->response_header->response();
+                $this->response_header->logAction($request, 1, "POST", $this->response, "albums_all");
                 return $this->response_header->json($this->response);
             }else{
                 $this->response["responseCode"] = "304";
                 $this->response["responseMessage"] = "Failed, no albums for this user";    
                 $this->response_header->response();
+                $this->response_header->logAction($request, 1, "POST", $this->response, "albums_all");
                 return $this->response_header->json($this->response);
             }
            
@@ -57,13 +60,14 @@ public function all($request){
             $this->response["responseCode"] = "304";
             $this->response["responseMessage"] = "Required parameter is missing!";
             $this->response_header->response();
+            $this->response_header->logAction($request, 1, "POST", $this->response, "albums_all");  
             return $this->response_header->json($this->response);
         }
         }
 
 
  public function store($request){
-
+    $this->response_header->logAction($request, 1, "POST", "", "store");
     if (isset($request['user_id']) && isset($request['album_id']) && $request['caption'] && isset($_FILES['image']['name'])) {
      $upload = $this->upload($request);
      if($upload != null){
@@ -74,6 +78,7 @@ public function all($request){
             $this->response["responseMessage"] = "Successfully stored photo or photos";
             $this->response["data"]["photos"] = $photo;
             $this->response_header->response();
+            $this->response_header->logAction($request, 1, "POST", $this->response, "store");
             return $this->response_header->json($this->response);
 
         }else{
@@ -81,12 +86,14 @@ public function all($request){
             $this->response["responseCode"] = "304";
             $this->response["responseMessage"] = "Could not store data!";
             $this->response_header->response();
+            $this->response_header->logAction($request, 1, "POST", $this->response, "store");
             return $this->response_header->json($this->response);
         }
         }else{
             $this->response["responseCode"] = "404";
             $this->response["responseMessage"] = "Required parameter is missing!";
             $this->response_header->response();
+            $this->response_header->logAction($request, 1, "POST", $this->response, "store");
             return $this->response_header->json($this->response);
      }
     

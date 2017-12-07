@@ -21,4 +21,18 @@ class headers{
         
         return json_encode($response);
     }
+
+
+    public function logAction($reqparams,$state=0,$method, $resparams, $method_name){
+        date_default_timezone_set('Africa/Accra');
+        //$logfile = $_SERVER['DOCUMENT_ROOT'].$this->docroot."/logs/bridgeLogs/".date('Y-m-d').".csv";
+        $logfile = "/Applications/Xampp/htdocs/mobile/storage/logs/" .date('Y-m-d').".csv";
+        $state = ($state==0)?'Request':'Response';
+        $date = date('Y-m-d H:i:s');
+        $reqparams = json_encode($reqparams);
+        $resparams = json_encode($resparams);
+        $insert = "\n\n $method $state at $date on $method_name with request params as: ".":". $reqparams . " and response as :". $resparams;
+        file_put_contents($logfile,$insert ,FILE_APPEND | LOCK_EX);
+    }
+
 }
