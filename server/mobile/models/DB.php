@@ -138,4 +138,25 @@ class DB extends Connection
         return $hash;
     }
 
+    /**
+     * set user online status
+     * @return boolean
+     */
+
+     public function setOnlineStatus($request, $status){
+        $stmt = $this->conn->prepare("UPDATE users SET online = ?  WHERE id = ? ");
+        $stmt->bind_param("ss", $status, $request['user_id']);
+       try{
+      
+       $result = $stmt->execute();
+       $stmt->close();
+       }catch(\Exception $e){
+           return $e->getMessage();
+       }
+       // check for successful store
+       if ($result) {
+           return true;
+       }
+     }
+
 }

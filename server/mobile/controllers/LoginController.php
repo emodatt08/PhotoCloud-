@@ -36,12 +36,19 @@ class LoginController extends DB
             $user =  $this->db->getUserByEmailAndPassword($email, $password);
            
             if ($user != false) {
+                $setOnlineStatus = $this->db->setOnlineStatus(1);
+                if($setOnlineStatus){
+                    $status = "1";
+                }else{
+                    $status = "0";
+                }
                 // user exists
                 $this->response["responseCode"] = "200";
                 $this->response["responseMessage"] = "User verified successfully";
                 $this->response["uid"] = $user["id"];
                 $this->response["user"]["name"] = $user["username"];
                 $this->response["user"]["email"] = $user["email"];
+                $this->response["user"]["online"] = $status;
                 $this->response["user"]["created_at"] = $user["created_at"];
                 $this->response["user"]["updated_at"] = $user["updated_at"];
                 $this->response_header->response();
@@ -62,6 +69,15 @@ class LoginController extends DB
             $this->response_header->response();
             $this->response_header->cross_origin();
             return $this->response_header->json($this->response);
+        }
+    }
+
+    public function logOut($request){
+        $setOnlineStatus = $this->db->setOnlineStatus(0);
+        if($setOnlineStatus){
+           return true;
+        }else{
+            return false;
         }
     }
 
